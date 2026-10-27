@@ -37,7 +37,7 @@ sequenceDiagram
     participant LLM as Model
 
     Loop->>LLM: Stream turn (Model calls read wrong_file)
-    Note over User,Loop: You see the tool call on screen and type: Stop! Read config instead
+    Note over User: You see wrong tool call and type: Stop!
     User->>Loop: steer(Read config instead)
     Note over Loop: Tool finishes executing
     Loop->>Loop: Poll Steering Queue -> Found 1 message!
