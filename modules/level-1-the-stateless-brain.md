@@ -80,7 +80,7 @@ The model has forgotten Turn 1. The agent runtime executes `read("src/auth.ts")`
 
 ## 4. Production Ground Truth: Pi Codebase 💻
 
-In [`packages/agent/src/agent.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent.ts#L83-L106), we see how this memory array is instantiated in production:
+In [`packages/agent/src/agent.ts`](./pi/packages/agent/src/agent.ts#L83-L106), we see how this memory array is instantiated in production:
 
 ```typescript
 function createMutableAgentState(initialState?: AgentInitialState): MutableAgentState {

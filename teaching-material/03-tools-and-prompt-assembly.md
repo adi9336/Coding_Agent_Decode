@@ -23,7 +23,7 @@ Pi ships with focused, specialized tools designed to minimize hallucination and 
 
 When AI rewrites a 1,000-line file, it often forgets functions, loses comments, or introduces subtle syntax errors.
 
-Pi solves this with **strict surgical edits** ([edit.ts](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/coding-agent/src/core/tools/edit.ts)):
+Pi solves this with **strict surgical edits** ([edit.ts](./pi/packages/coding-agent/src/core/tools/edit.ts)):
 1. The AI must supply the **exact snippet** (`target`) that currently exists in the file.
 2. The AI provides the **replacement snippet**.
 3. If the target snippet is ambiguous or doesn't match character-for-character (including indentation), Pi **rejects the edit** and tells the model to re-read.
@@ -40,7 +40,7 @@ flowchart LR
 
 ## 3. How the System Prompt is Assembled 🧩
 
-The AI model doesn't just receive your message; it receives an entire dossier assembled by [system-prompt.ts](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/coding-agent/src/core/system-prompt.ts):
+The AI model doesn't just receive your message; it receives an entire dossier assembled by [system-prompt.ts](./pi/packages/coding-agent/src/core/system-prompt.ts):
 
 ```
 ┌────────────────────────────────────────────────────────┐

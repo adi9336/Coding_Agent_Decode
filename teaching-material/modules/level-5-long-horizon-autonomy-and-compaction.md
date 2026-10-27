@@ -28,7 +28,7 @@ In an active coding session:
 
 ## 3. The Production Solution: Context Compaction 📦
 
-In [`packages/coding-agent/src/core/compaction`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/coding-agent/src/core/compaction), Pi implements an automated compaction engine:
+In [`packages/coding-agent/src/core/compaction`](./pi/packages/coding-agent/src/core/compaction), Pi implements an automated compaction engine:
 
 ```
 [System Rules] ──► Preserved 100% untouched

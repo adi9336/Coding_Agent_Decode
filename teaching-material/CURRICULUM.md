@@ -47,8 +47,8 @@ This curriculum is structured into **5 progressive levels**. Each level answers 
 * The illusion of memory is maintained by replaying the entire history of user messages, thoughts, and tool results back to the model on every single turn.
 
 ### 🔬 Production Code Ground Truth
-* [`pi/packages/agent/src/agent.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent.ts#L83-L112): Notice how `createMutableAgentState` holds a plain JavaScript array `messages = []`.
-* [`pi/packages/agent/src/agent-loop.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L404): Notice how the internal rich messages (`AgentMessage[]`) are converted to provider format (`Message[]`) right before the network request.
+* [`pi/packages/agent/src/agent.ts`](./pi/packages/agent/src/agent.ts#L83-L112): Notice how `createMutableAgentState` holds a plain JavaScript array `messages = []`.
+* [`pi/packages/agent/src/agent-loop.ts`](./pi/packages/agent/src/agent-loop.ts#L404): Notice how the internal rich messages (`AgentMessage[]`) are converted to provider format (`Message[]`) right before the network request.
 
 ### 🛠️ Practical Milestone 1
 > Write a 30-line Node.js/Python script that calls an LLM, appends the output to an array, and feeds it back. Observe how token costs scale quadratically with message length.
@@ -65,11 +65,11 @@ This curriculum is structured into **5 progressive levels**. Each level answers 
 * **The Goal Sequencer (Outer Loop)**: The job supervisor. Stays alive after the inner loop finishes to check if there are queued follow-up tasks.
 
 ### 🔬 Production Code Ground Truth
-* [`agent-loop.ts#L188`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L188): `while (true)` (Outer Loop)
-* [`agent-loop.ts#L192`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L192): `while (hasMoreToolCalls || pendingMessages.length > 0)` (Inner Loop)
+* [`agent-loop.ts#L188`](./pi/packages/agent/src/agent-loop.ts#L188): `while (true)` (Outer Loop)
+* [`agent-loop.ts#L192`](./pi/packages/agent/src/agent-loop.ts#L192): `while (hasMoreToolCalls || pendingMessages.length > 0)` (Inner Loop)
 
 ### 🛠️ Practical Milestone 2
-> Open [**`deep-loop-explorer.html`**](file:///C:/Users/adi/CODING_AGENT_DECODE/teaching-material/deep-loop-explorer.html) in your browser. Click **"Run Next Turn"** to watch the inner loop cycle through tool calls until completion, and observe when the outer loop goes idle.
+> Open [**`deep-loop-explorer.html`**](./teaching-material/deep-loop-explorer.html) in your browser. Click **"Run Next Turn"** to watch the inner loop cycle through tool calls until completion, and observe when the outer loop goes idle.
 
 ---
 
@@ -85,11 +85,11 @@ This curriculum is structured into **5 progressive levels**. Each level answers 
   2. **Follow-Up Queue (`followUp()`)**: Checked **only when the agent is idle** in the outer loop. Queues future tasks without interrupting current focus.
 
 ### 🔬 Production Code Ground Truth
-* [`agent.ts#L149`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent.ts#L149): `PendingMessageQueue` implementation.
-* [`agent-loop.ts#L185`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L185): `config.getSteeringMessages()` draining the steering queue before streaming the next turn.
+* [`agent.ts#L149`](./pi/packages/agent/src/agent.ts#L149): `PendingMessageQueue` implementation.
+* [`agent-loop.ts#L185`](./pi/packages/agent/src/agent-loop.ts#L185): `config.getSteeringMessages()` draining the steering queue before streaming the next turn.
 
 ### 🛠️ Practical Milestone 3
-> In [**`deep-loop-explorer.html`**](file:///C:/Users/adi/CODING_AGENT_DECODE/teaching-material/deep-loop-explorer.html), run a turn and immediately click **"⚡ Steer (Urgent Interrupt)"**. Observe how the inner loop pauses tool execution to process your steering message first.
+> In [**`deep-loop-explorer.html`**](./teaching-material/deep-loop-explorer.html), run a turn and immediately click **"⚡ Steer (Urgent Interrupt)"**. Observe how the inner loop pauses tool execution to process your steering message first.
 
 ---
 
@@ -104,11 +104,11 @@ This curriculum is structured into **5 progressive levels**. Each level answers 
 * **Token Limit Truncation**: When an LLM runs out of output tokens mid-JSON, naive agents execute corrupted arguments. Production engines abort truncated tool batches immediately.
 
 ### 🔬 Production Code Ground Truth
-* [`edit.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/coding-agent/src/core/tools/edit.ts): The exact find-and-replace algorithm.
-* [`agent-loop.ts#L488`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L488): `failToolCallsFromTruncatedMessage` aborting corrupted tool calls when `stopReason === "length"`.
+* [`edit.ts`](./pi/packages/coding-agent/src/core/tools/edit.ts): The exact find-and-replace algorithm.
+* [`agent-loop.ts#L488`](./pi/packages/agent/src/agent-loop.ts#L488): `failToolCallsFromTruncatedMessage` aborting corrupted tool calls when `stopReason === "length"`.
 
 ### 🛠️ Practical Milestone 4
-> Inspect [`03-tools-and-prompt-assembly.md`](file:///C:/Users/adi/CODING_AGENT_DECODE/teaching-material/03-tools-and-prompt-assembly.md) to study the exact JSON schema that makes tool execution deterministic.
+> Inspect [`03-tools-and-prompt-assembly.md`](./teaching-material/03-tools-and-prompt-assembly.md) to study the exact JSON schema that makes tool execution deterministic.
 
 ---
 
@@ -125,7 +125,7 @@ This curriculum is structured into **5 progressive levels**. Each level answers 
   3. The runtime replaces the raw historical turns with the summary block, shrinking context by 70%+ while preserving continuity.
 
 ### 🔬 Production Code Ground Truth
-* [`packages/coding-agent/src/core/compaction`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/coding-agent/src/core/compaction): Token estimation, branch summaries, and automated compaction triggers.
+* [`packages/coding-agent/src/core/compaction`](./pi/packages/coding-agent/src/core/compaction): Token estimation, branch summaries, and automated compaction triggers.
 
 ### 🛠️ Practical Milestone 5
 > Examine `packages/coding-agent/src/core/compaction/prepare-compaction.ts` to see how older conversation slices are extracted and summarized without discarding active system instructions.

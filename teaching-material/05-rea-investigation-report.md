@@ -39,6 +39,6 @@ REA performed semantic AST reconstruction across all 18 source files and resolve
 ## 3. What REA Proved (Ground Truths)
 
 1. **Zero Global Variables**: The agent engine has no hidden global state. Everything lives strictly inside `AgentContext` and `MutableAgentState`.
-2. **Strict Protocol Boundary**: The agent converts its internal rich messages (`AgentMessage[]`) into LLM-compatible format (`Message[]`) **only at the absolute last millisecond** before hitting the AI API ([`agent-loop.ts#L404`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L404)).
+2. **Strict Protocol Boundary**: The agent converts its internal rich messages (`AgentMessage[]`) into LLM-compatible format (`Message[]`) **only at the absolute last millisecond** before hitting the AI API ([`agent-loop.ts#L404`](./pi/packages/agent/src/agent-loop.ts#L404)).
 3. **Fail-Safe Argument Recovery**: REA identified that when token exhaustion occurs, `failToolCallsFromTruncatedMessage` intercepts the truncated JSON before it ever executes on disk.
 

@@ -63,7 +63,7 @@ The detective **never guesses** if they can verify with tools.
 
 When an AI model says *"I want to read 3 files at once"*, how does Pi handle it?
 
-In [types.ts](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/types.ts#L47), Pi defines two modes:
+In [types.ts](./pi/packages/agent/src/types.ts#L47), Pi defines two modes:
 - **`parallel` (Default)**: Preflights all tool calls sequentially for safety, then runs independent operations concurrently via `Promise.all()`. Fast!
 - **`sequential`**: Runs tool 1 → waits for finish → runs tool 2 → waits. Safer for destructive file edits.
 
@@ -76,7 +76,7 @@ In [types.ts](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/typ
 
 What if the agent is in the middle of a 10-step task, and you notice it's going the wrong way?
 
-Pi has two special priority queues in [agent.ts](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent.ts#L149):
+Pi has two special priority queues in [agent.ts](./pi/packages/agent/src/agent.ts#L149):
 
 | Queue | What it does | Real-life Analogy |
 |---|---|---|

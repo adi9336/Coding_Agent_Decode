@@ -19,7 +19,7 @@ When you ask an AI model to update one line in an 800-line file:
 
 ## 2. The Solution: Surgical String Replacement (The Scalpel) ✂️
 
-Pi's [`edit.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/coding-agent/src/core/tools/edit.ts) replaces the sledgehammer with a scalpel:
+Pi's [`edit.ts`](./pi/packages/coding-agent/src/core/tools/edit.ts) replaces the sledgehammer with a scalpel:
 
 ```json
 {
@@ -57,7 +57,7 @@ What happens if an LLM is outputting a massive JSON tool call, but runs out of o
 ### The Disaster in Naive Agents:
 A naive parser tries to "auto-complete" or parse the broken JSON, and writes corrupted garbage into your production file.
 
-### How Pi Protects You ([`agent-loop.ts#L488`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L488)):
+### How Pi Protects You ([`agent-loop.ts#L488`](./pi/packages/agent/src/agent-loop.ts#L488)):
 
 ```typescript
 if (message.stopReason === "length") {

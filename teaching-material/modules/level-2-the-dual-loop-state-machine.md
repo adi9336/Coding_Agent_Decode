@@ -65,7 +65,7 @@ The carpenter does not leave the workshop until the cut is finished. The foreman
 
 ## 4. Reverse-Engineered Source: `agent-loop.ts` 🔬
 
-Look at the exact lines in [`packages/agent/src/agent-loop.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent-loop.ts#L188-L327):
+Look at the exact lines in [`packages/agent/src/agent-loop.ts`](./pi/packages/agent/src/agent-loop.ts#L188-L327):
 
 ```typescript
 // OUTER LOOP: Keeps running as long as follow-up work exists

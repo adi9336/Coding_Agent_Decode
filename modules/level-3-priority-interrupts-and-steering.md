@@ -18,7 +18,7 @@ If you notice the agent going down the wrong rabbit hole, your only option is pr
 
 ## 2. The Solution: Dual Priority Queues 🚦
 
-Pi resolves this by introducing two distinct message queues inside [`packages/agent/src/agent.ts`](file:///C:/Users/adi/CODING_AGENT_DECODE/pi/packages/agent/src/agent.ts#L149-L180):
+Pi resolves this by introducing two distinct message queues inside [`packages/agent/src/agent.ts`](./pi/packages/agent/src/agent.ts#L149-L180):
 
 | Queue | Method | Drain Point | Real-World Analogy |
 |---|---|---|---|
