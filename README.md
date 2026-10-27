@@ -19,6 +19,7 @@ Start with the 5-Level Mastery Path:
 | **Level 2** | [**The Dual-Loop State Machine**](./modules/level-2-the-dual-loop-state-machine.md) | Inner reflex tool loop vs. Outer goal sequencing loop. |
 | **Level 2.5** | [**Inner vs. Outer Loop Full Workflow**](./teaching-material/06-inner-vs-outer-loop-workflow.md) | 🔄 Detailed architecture flowchart, lifecycle trace, and comparison table. |
 | **Level 3** | [**Priority Interrupts & Steering**](./modules/level-3-priority-interrupts-and-steering.md) | Mid-flight human steering (`steer()`) vs. deferred follow-up tasks (`followUp()`). |
+| **Pillar 3 Deep Dive** | [**Pillar 3 Deep Dive: Steering & Interrupt Architecture**](./teaching-material/07-pillar-3-priority-interrupts-deep-dive.md) | 🛑 Self-driving taxi analogy, settling active tools cleanly, queue drain modes (`one-at-a-time` vs `all`). |
 | **Level 4** | [**Tool Execution & Destruction Guards**](./modules/level-4-tool-execution-and-destruction-guards.md) | The Scalpel vs. Sledgehammer: exact string replacement and truncation abort gates. |
 | **Level 5** | [**Long-Horizon Autonomy & Compaction**](./modules/level-5-long-horizon-autonomy-and-compaction.md) | How agents survive 10-hour sessions via automatic context compaction at 80% token limits. |
 
