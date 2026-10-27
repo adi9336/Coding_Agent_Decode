@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Agent Architecture: The Dual-Loop Engine</title>
+<style>
+  :root {
+    --bg: #090d16;
+    --card: #131c2e;
+    --card-accent: #1e293b;
+    --border: #22324e;
+    --text: #f1f5f9;
+    --text-dim: #94a3b8;
+    --blue: #38bdf8;
+    --purple: #c084fc;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --rose: #fb7185;
+    --code-bg: #050811;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 30px 20px;
+    line-height: 1.6;
+  }
+  .wrapper { max-width: 1200px; margin: 0 auto; }
+  
+  header { text-align: center; margin-bottom: 40px; }
+  h1 { font-size: 2.4rem; color: var(--blue); margin-bottom: 10px; font-weight: 800; }
+  .badge-tag { 
+    background: rgba(56, 189, 248, 0.15); 
+    color: var(--blue); 
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 4px 14px; 
+    border-radius: 999px; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  p.lead { color: var(--text-dim); font-size: 1.15rem; max-width: 800px; margin: 0 auto; }
+
+  /* Architecture Diagram Canvas */
+  .diagram-container {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  .loop-box {
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .outer-loop {
+    border: 2px dashed var(--purple);
+    background: rgba(192, 132, 252, 0.03);
+  }
+  .inner-loop {
+    border: 2px solid var(--blue);
+    background: rgba(56, 189, 248, 0.05);
+    margin: 20px 0;
+  }
+  .loop-title {
+    position: absolute;
+    top: -14px;
+    left: 20px;
+    background: var(--card);
+    padding: 2px 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+  }
+  .outer-title { color: var(--purple); border: 1px solid var(--purple); }
+  .inner-title { color: var(--blue); border: 1px solid var(--blue); }
+
+  .pipeline-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .node {
+    background: var(--card-accent);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .node:hover { transform: translateY(-3px); border-color: var(--blue); }
+  .node-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .node-title { font-weight: 700; font-size: 1rem; color: #fff; margin-bottom: 4px; }
+  .node-desc { font-size: 0.8rem; color: var(--text-dim); }
+
+  /* Interactive Simulator */
+  .interactive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 30px;
+  }
+  @media(max-width: 900px) { .interactive-grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .panel h3 { margin-bottom: 16px; color: var(--emerald); display: flex; align-items: center; gap: 8px; }
+
+  .log-terminal {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.85rem;
+    height: 320px;
+    overflow-y: auto;
+    color: #e2e8f0;
+  }
+  .log-line { margin-bottom: 6px; }
+  .log-tag { font-weight: bold; }
+  .tag-inner { color: var(--blue); }
+  .tag-outer { color: var(--purple); }
+  .tag-tool { color: var(--amber); }
+  .tag-error { color: var(--rose); }
+
+  .btn {
+    background: var(--blue);
+    color: #000;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 10px;
+    margin-top: 12px;
+  }
+  .btn:hover { opacity: 0.9; transform: scale(0.98); }
+  .btn-steer { background: var(--amber); }
+  .btn-follow { background: var(--purple); color: #fff; }
+  .btn-reset { background: var(--card-accent); color: #fff; border: 1px solid var(--border); }
+
+  /* Concept Cards */
+  .concepts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 40px 0;
+  }
+  .concept-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .concept-card h4 { color: var(--amber); margin-bottom: 8px; font-size: 1.1rem; }
+  .concept-card p { font-size: 0.9rem; color: var(--text-dim); }
+
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <header>
+    <div class="badge-tag">Reverse-Engineered Architecture</div>
+    <h1>How Coding Agents Actually Work</h1>
+    <p class="lead">Deconstructing the Dual-Loop Engine, Steering Interrupts, and State Persistence that power tools like Pi, Cursor, and Claude Code.</p>
+  </header>
+
+  <!-- ARCHITECTURE VISUALIZATION -->
+  <div class="diagram-container">
+    <div class="loop-box outer-loop">
+      <div class="loop-title outer-title">🔄 OUTER LOOP: Goal & Follow-up Sequencer (while true)</div>
+      <p style="color: var(--purple); font-size: 0.9rem; margin-bottom: 12px;"><b>Responsibility:</b> Keeps the agent alive across multi-phase tasks. Only triggers when the agent finishes its current work and would otherwise go to sleep.</p>
+      
+      <div class="loop-box inner-loop">
+        <div class="loop-title inner-title">⚡ INNER LOOP: Immediate Tool Turn & Reflex (while hasMoreToolCalls)</div>
+        <p style="color: var(--blue); font-size: 0.9rem; margin-bottom: 16px;"><b>Responsibility:</b> The atomic cycle. LLM thinking ➔ Tool execution ➔ Result ingestion. Repeats until all file operations and commands are settled.</p>
+
+        <div class="pipeline-flow">
+          <div class="node">
+            <div class="node-icon">🚨</div>
+            <div class="node-title">1. Steering Poll</div>
+            <div class="node-desc">Checks if user pressed a key or sent an urgent mid-flight correction.</div>
+          </div>
+          <div class="node">
+            <div class="node-icon">🧠</div>
+            <div class="node-title">2. Stream LLM</div>
+            <div class="node-desc">Sends transcript snapshot to model; streams tokens & tool calls.</div>
+          </div>
+          <div class="node">
+            <div class="node-icon">✂️</div>
+            <div class="node-title">3. Tool Execute</div>
+            <div class="node-desc">Runs read, surgical edit, or bash commands with safety guards.</div>
+          </div>
+          <div class="node">
+            <div class="node-icon">📝</div>
+            <div class="node-title">4. Append Result</div>
+            <div class="node-desc">Injects tool outputs back into transcript so LLM sees reality.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: right; color: var(--purple); font-size: 0.85rem; font-weight: bold;">
+        ➔ When Inner Loop exhausts all tool calls: Drain Follow-up Queue!
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE SIMULATOR -->
+  <div class="interactive-grid">
+    <div class="panel">
+      <h3>🎮 Agent Loop Controller</h3>
+      <p style="color: var(--text-dim); margin-bottom: 16px; font-size: 0.95rem;">Trigger real agentic events to observe how the nested state machine prioritizes user steering over queued follow-ups.</p>
+      
+      <button class="btn" onclick="triggerStep()">▶ Run Next Turn</button>
+      <button class="btn btn-steer" onclick="triggerSteer()">⚡ Steer (Urgent Interrupt)</button>
+      <button class="btn btn-follow" onclick="triggerFollowUp()">📋 Add Follow-Up Task</button>
+      <button class="btn btn-reset" onclick="resetSim()">↺ Reset</button>
+
+      <div style="margin-top: 24px; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px; border: 1px solid var(--border);">
+        <div style="font-size: 0.85rem; color: var(--text-dim);">Queue Status:</div>
+        <div style="margin-top: 8px; font-size: 0.95rem;">
+          <b>Steering Queue (Immediate):</b> <span id="steer-count" style="color: var(--amber);">0 items</span><br>
+          <b>Follow-Up Queue (Deferred):</b> <span id="follow-count" style="color: var(--purple);">0 items</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>📟 Internal Event Log</h3>
+      <div class="log-terminal" id="terminal-output">
+        <div class="log-line"><span class="log-tag tag-outer">[OUTER_LOOP]</span> Session booted. Initializing transcript.</div>
+        <div class="log-line"><span class="log-tag tag-inner">[INNER_LOOP]</span> Waiting for first prompt...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURAL PILLARS -->
+  <div class="concepts-row">
+    <div class="concept-card">
+      <h4>1. The Stateless Illusion</h4>
+      <p>LLMs have zero working memory. The agent reconstructs the entire illusion of memory by injecting previous user turns and tool results as a single concatenated prompt on every turn.</p>
+    </div>
+    <div class="concept-card">
+      <h4>2. Truncation Guard</h4>
+      <p>If an LLM hits the max-output token limit mid-JSON, Pi's engine refuses to execute the half-generated tool call to prevent corrupted files on disk.</p>
+    </div>
+    <div class="concept-card">
+      <h4>3. Automatic Compaction</h4>
+      <p>When the transcript approaches 80% of the token limit, the agent triggers a silent background summarizer to compress past turns into a concise briefing.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let stepIndex = 0;
+  let steerQueue = 0;
+  let followQueue = 0;
+
+  function log(tag, tagClass, text) {
+    const term = document.getElementById('terminal-output');
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `<span class="log-tag ${tagClass}">[${tag}]</span> ${text}`;
+    term.appendChild(line);
+    term.scrollTop = term.scrollHeight;
+  }
+
+  function updateQueues() {
+    document.getElementById('steer-count').innerText = `${steerQueue} items`;
+    document.getElementById('follow-count').innerText = `${followQueue} items`;
+  }
+
+  function triggerSteer() {
+    steerQueue++;
+    updateQueues();
+    log("STEER_INJECT", "tag-tool", "User injected priority steering message: 'Stop, check auth.ts first!'");
+  }
+
+  function triggerFollowUp() {
+    followQueue++;
+    updateQueues();
+    log("FOLLOW_QUEUE", "tag-outer", "Task appended to Follow-Up Queue: 'Run integration test suite after fixing code.'");
+  }
+
+  function triggerStep() {
+    if (steerQueue > 0) {
+      steerQueue--;
+      updateQueues();
+      log("INNER_LOOP", "tag-inner", "Prioritized steering message consumed! Re-routing prompt to model.");
+      return;
+    }
+
+    stepIndex++;
+    if (stepIndex === 1) {
+      log("INNER_LOOP", "tag-inner", "LLM streamed tool call: <code>read('auth.ts')</code>");
+    } else if (stepIndex === 2) {
+      log("TOOL_EXEC", "tag-tool", "Tool result: 42 lines read from disk. Feeding back to inner loop.");
+    } else if (stepIndex === 3) {
+      log("INNER_LOOP", "tag-inner", "LLM streamed tool call: <code>edit('auth.ts', line 24)</code>");
+    } else if (stepIndex === 4) {
+      log("TOOL_EXEC", "tag-tool", "Surgical match verified. File updated on disk. Inner loop tool calls = 0.");
+    } else if (stepIndex === 5) {
+      log("INNER_LOOP", "tag-inner", "LLM output final summary: 'Bug resolved.' Inner loop ends.");
+      if (followQueue > 0) {
+        followQueue--;
+        updateQueues();
+        log("OUTER_LOOP", "tag-outer", "Follow-up queue not empty! Awakening inner loop with next task.");
+        stepIndex = 0;
+      } else {
+        log("OUTER_LOOP", "tag-outer", "All queues drained. Emitting agent_end. Process IDLE.");
+      }
+    } else {
+      log("AGENT_IDLE", "tag-inner", "Agent is idle. Send a new prompt or click Steer / Follow-Up.");
+    }
+  }
+
+  function resetSim() {
+    stepIndex = 0;
+    steerQueue = 0;
+    followQueue = 0;
+    updateQueues();
+    document.getElementById('terminal-output').innerHTML = `
+      <div class="log-line"><span class="log-tag tag-outer">[OUTER_LOOP]</span> Session booted. Initializing transcript.</div>
+      <div class="log-line"><span class="log-tag tag-inner">[INNER_LOOP]</span> Waiting for first prompt...</div>
+    `;
+  }
+</script>
+</body>
+</html>
+

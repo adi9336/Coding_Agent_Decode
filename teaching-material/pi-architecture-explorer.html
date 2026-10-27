@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pi Agent Architecture Interactive Explorer</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #38bdf8;
+    --accent: #a855f7;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --code-bg: #0b1120;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    line-height: 1.6;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 32px; }
+  h1 { font-size: 2.2rem; color: var(--primary); margin-bottom: 8px; }
+  .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+
+  /* Navigation Tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--card);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+  .tab-btn.active { background: var(--primary); color: #000; }
+
+  /* Card Grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--primary); }
+  .card h3 { color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .badge {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+
+  /* Interactive Simulator */
+  .sim-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .step-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 32px 0 24px 0;
+  }
+  .step-container::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    right: 40px;
+    height: 4px;
+    background: var(--border);
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+  .step {
+    position: relative;
+    z-index: 2;
+    background: var(--card);
+    border: 3px solid var(--border);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+  }
+  .step.active { border-color: var(--primary); background: var(--primary); color: #000; box-shadow: 0 0 16px rgba(56,189,248,0.5); }
+  .step.done { border-color: var(--success); background: var(--success); color: #fff; }
+  .console {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    min-height: 140px;
+    white-space: pre-wrap;
+    color: #38bdf8;
+  }
+  .btn-row { display: flex; gap: 12px; margin-top: 16px; }
+  .action-btn {
+    background: var(--primary);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .action-btn:hover { opacity: 0.9; }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🥧 Pi Agent: Architecture & Runtime Explorer</h1>
+    <p class="subtitle">An interactive guide breaking down the modular engine behind the Pi CLI coding agent</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('packages')">📦 7 Monorepo Packages</button>
+    <button class="tab-btn" onclick="switchTab('simulator')">🔄 Agent Loop Simulator</button>
+    <button class="tab-btn" onclick="switchTab('tools')">🛠️ Built-in Tools</button>
+    <button class="tab-btn" onclick="switchTab('compare')">⚖️ Design Philosophy</button>
+  </div>
+
+  <!-- TAB 1: PACKAGES -->
+  <div id="tab-packages">
+    <div class="grid">
+      <div class="card">
+        <h3><span>🧠 pi-agent-core</span> <span class="badge">Engine</span></h3>
+        <p>The state machine orchestrating the think-act-observe cycle. Houses the streaming engine, tool dispatching, and conversation lifecycle hooks.</p>
+      </div>
+      <div class="card">
+        <h3><span>🤖 pi-ai</span> <span class="badge">Model Hub</span></h3>
+        <p>Unified client translating prompts and tool definitions across OpenAI, Anthropic, Gemini, Ollama, and local models seamlessly.</p>
+      </div>
+      <div class="card">
+        <h3><span>🎯 pi-coding-agent</span> <span class="badge">App CLI</span></h3>
+        <p>The full developer application containing filesystem tools (read, edit, write, bash), extension runners, skills loaders, and prompt builders.</p>
+      </div>
+      <div class="card">
+        <h3><span>🪑 pi-tui</span> <span class="badge">Terminal UI</span></h3>
+        <p>High-performance terminal rendering engine utilizing differential updates to draw reactive markdown, spinners, and stream buffers without flickering.</p>
+      </div>
+      <div class="card">
+        <h3><span>📦 pi-durable</span> <span class="badge">Persistence</span></h3>
+        <p>Reliable JSONL transcript storage and session branch management. Allows instant pause, resume, branching, and context compaction.</p>
+      </div>
+      <div class="card">
+        <h3><span>🔌 chord</span> <span class="badge">Host Link</span></h3>
+        <p>Typed host RPC and plugin communication backbone enabling hot-reloading extensions, cross-process tool calls, and sandboxing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: SIMULATOR -->
+  <div id="tab-simulator" class="hidden">
+    <div class="sim-box">
+      <h3>Live Loop Walkthrough</h3>
+      <p style="color: var(--text-muted); margin-bottom: 12px;">Step through the exact sequence of events that occurs when you prompt Pi to fix a bug:</p>
+
+      <div class="step-container">
+        <div id="step-1" class="step active">1</div>
+        <div id="step-2" class="step">2</div>
+        <div id="step-3" class="step">3</div>
+        <div id="step-4" class="step">4</div>
+      </div>
+
+      <div class="console" id="sim-console">> Prompt: "Add login button in index.html"
+> [AgentLoop]: Initializing transcript snapshot & system prompt.
+> [LLM]: Model thinking... deciding first tool call.</div>
+
+      <div class="btn-row">
+        <button class="action-btn" onclick="nextSimStep()">Next Step ➔</button>
+        <button class="action-btn" style="background: var(--border); color: #fff;" onclick="resetSim()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: TOOLS -->
+  <div id="tab-tools" class="hidden">
+    <div class="grid">
+      <div class="card">
+        <h3><span>📖 read</span></h3>
+        <p>Paginates through files with line numbers. Reads raw text or downsamples images to keep LLM context light.</p>
+      </div>
+      <div class="card">
+        <h3><span>✂️ edit</span></h3>
+        <p>Surgical find-and-replace. Requires the AI to match the exact characters on disk. If whitespace or lines don't match, the edit is safely rejected.</p>
+      </div>
+      <div class="card">
+        <h3><span>📝 write</span></h3>
+        <p>Creates new files from scratch or writes complete replacements atomically.</p>
+      </div>
+      <div class="card">
+        <h3><span>⚡ bash / powershell</span></h3>
+        <p>Executes shell commands with process timeouts, output truncation guards, and background daemon task tracking.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: COMPARE -->
+  <div id="tab-compare" class="hidden">
+    <div class="grid">
+      <div class="card">
+        <h3>Pi's Philosophy</h3>
+        <ul style="padding-left: 20px; margin-top: 8px;">
+          <li><b>Minimalist:</b> No forced planning agents or complex sub-agent swarms out of the box.</li>
+          <li><b>Your Machine, Your Rules:</b> Runs under your local user permissions without hidden sandboxes unless you ask for one.</li>
+          <li><b>Monorepo Reusability:</b> You can import <code>@earendil-works/pi-agent-core</code> directly into your own Node/TypeScript app without the CLI.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Steering vs Follow-Up</h3>
+        <p><b>Steer:</b> Injects an urgent message mid-run before the next turn.</p>
+        <p style="margin-top: 8px;"><b>Follow-up:</b> Waits quietly until all current tool calls and assistant turns are completely idle before triggering the next task.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById('tab-' + tabName).classList.remove('hidden');
+  }
+
+  let currentStep = 1;
+  const consoleMessages = [
+    `> Prompt: "Add login button in index.html"\n> [AgentLoop]: Initializing transcript snapshot & system prompt.\n> [LLM]: Model thinking... deciding first tool call.`,
+    `> [LLM Event]: ToolCall detected -> read("index.html")\n> [ToolExecutor]: Reading index.html (Lines 1-45)\n> [AgentEvent]: tool_execution_end with file contents.`,
+    `> [LLM Event]: Model reviews file contents.\n> [LLM Event]: ToolCall detected -> edit("index.html", target: "</div>", replacement: "<button>Login</button></div>")\n> [FileMutation]: Exact match verified! File written atomically.`,
+    `> [LLM Event]: Final Assistant Response streamed to terminal.\n> "I've added the login button right inside the nav container."\n> [AgentLoop]: Run settled. Saving transcript to session.jsonl.`
+  ];
+
+  function nextSimStep() {
+    if (currentStep < 4) {
+      document.getElementById('step-' + currentStep).classList.remove('active');
+      document.getElementById('step-' + currentStep).classList.add('done');
+      currentStep++;
+      document.getElementById('step-' + currentStep).classList.add('active');
+      document.getElementById('sim-console').innerText = consoleMessages[currentStep - 1];
+    }
+  }
+
+  function resetSim() {
+    currentStep = 1;
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('step-' + i);
+      el.classList.remove('active', 'done');
+    }
+    document.getElementById('step-1').classList.add('active');
+    document.getElementById('sim-console').innerText = consoleMessages[0];
+  }
+</script>
+</body>
+</html>
