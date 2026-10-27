@@ -32,17 +32,17 @@ Pi resolves this by introducing two distinct message queues inside [`packages/ag
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as 👤 You
-    participant Loop as ⚡ Inner Loop
-    participant LLM as 🤖 Model
+    actor User as You
+    participant Loop as Inner Loop
+    participant LLM as Model
 
-    Loop->>LLM: Stream turn (Model calls read("wrong_file.ts"))
-    Note over User,Loop: You see the tool call on screen and type: "Stop! Don't read that, read config.ts"
-    User->>Loop: steer("Read config.ts instead")
-    Note over Loop: Tool finishes executing.
+    Loop->>LLM: Stream turn (Model calls read wrong_file)
+    Note over User,Loop: You see the tool call on screen and type: Stop! Read config instead
+    User->>Loop: steer(Read config instead)
+    Note over Loop: Tool finishes executing
     Loop->>Loop: Poll Steering Queue -> Found 1 message!
     Loop->>LLM: Injects user steering message BEFORE next assistant generation
-    LLM-->>Loop: "Understood. Switching to config.ts..."
+    LLM-->>Loop: Understood. Switching to config
 ```
 
 Notice that the tool execution was allowed to settle cleanly, but before the model could take another wrong action, the user's message was injected directly in front of it.
